@@ -1,1 +1,1 @@
-# wifi-bbq-themometer-
+# wifi-bbq-thermometer
