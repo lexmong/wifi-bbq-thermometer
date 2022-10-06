@@ -1,51 +1,11 @@
 <html>
 
 <head>
-    <style>
-
-        @font-face { font-family: Poppins; src: url('Poppins-Regular.ttf'); } 
-
-        body{
-            background-color: #0b1727 !important;
-            color: white !important;
-            font-family: Poppins !important;
-        }
-
-        .probe{
-            background-color: #1f3450 !important;
-        }
-
-        .probe-number{
-            border-radius: 50%;
-            width: 72px;
-            height: 72px;
-            font-size: 30pt;
-            text-align: center;
-            vertical-align: middle;
-            line-height: 68px;    
-            border: 4px solid white;
-        }
-
-        .target{
-            font-size: 16pt;
-        }
-
-        .temperature{
-            font-size: 75px;
-        }
-
-        .probe .unit{
-            font-size: 25pt;
-            margin-bottom: 25pt;
-        }
-
-    </style>
-
-
     <meta http-equiv="content-type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
@@ -57,9 +17,29 @@
 </head>
 
 <body>
-    <div class="container-fluid vh-100">
-        <div ng-app="app" ng-view>
-        </div>
+    <div class="container-fluid vh-100 p-0" ng-app="app">
+        <nav class="navbar navbar-expand-lg navbar-dark" 
+        ng-controller="navCtrl">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#"></a>
+            <button class="navbar-toggler" type="button" 
+            data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" 
+            aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item" ng-repeat="link in links">
+                    <a ng-class="class(link.href)" ng-href="#!{{link.href}}" 
+                    onclick="$('.navbar-toggler').click()" 
+                    class="nav-link">{{link.text}}</a>
+                </li> 
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <div  class="ms-3 me-3" ng-view></div>
     </div>
 </body>
 

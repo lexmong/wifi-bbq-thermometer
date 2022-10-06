@@ -1,5 +1,6 @@
 var app = angular.module('app', ['ngRoute']);
 
+
 app.config(function ($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
         controller: 'tempCtrl',
@@ -39,6 +40,8 @@ app.controller('tempCtrl', ['$scope', '$http','$interval', function ($scope, $ht
             }
         });
     }
+
+    getTemp();
 
     update = $interval(function() {
         getTemp();
@@ -91,5 +94,12 @@ app.controller('configCtrl', ['$scope', '$http', function ($scope, $http) {
     };
 
     $scope.toAlpha = (i) => String.fromCharCode(i+65);
+}]);
 
+app.controller('navCtrl',['$scope','$location',function ($scope,$location){
+    $scope.links = [
+        {text:'Probes',href:'/'},
+        {text:'Configuration',href:'/config'},
+    ];
+    $scope.class = (page) => page == $location.path()? 'active':'';
 }]);

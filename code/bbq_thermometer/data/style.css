@@ -1,0 +1,35 @@
+@font-face { font-family: Poppins; src: url('Poppins-Regular.ttf'); } 
+
+body{
+    background-color: #0b1727 !important;
+    color: white !important;
+    font-family: Poppins !important;
+}
+
+.probe{
+    background-color: #1f3450 !important;
+}
+
+.probe-number{
+    border-radius: 50%;
+    width: 72px;
+    height: 72px;
+    font-size: 30pt;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 68px;    
+    border: 4px solid white;
+}
+
+.target{
+    font-size: 16pt;
+}
+
+.temperature{
+    font-size: 75px;
+}
+
+.probe .unit{
+    font-size: 25pt;
+    margin-bottom: 25pt;
+}

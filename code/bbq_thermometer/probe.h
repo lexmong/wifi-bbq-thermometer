@@ -1,25 +1,14 @@
 #include <math.h>
 #include <Adafruit_ADS1X15.h>
 
+const int N_PROBES = 2;
+
 Adafruit_ADS1115 ads;
 double vRef = 4.52;
 double rRef = 100000;
 int16_t adc;
 double volts;
-
-
-double coeffs[2][3] = {
-  { 
-    0.001714296,
-    0.000081099,
-    3.693302044e-7
-  },
-  { 
-    2.025087E-03,
-    3.170937E-05,
-    5.042739E-07
-  }
-};
+double coeffs[N_PROBES][3];
 
 void initAds(){
   if (!ads.begin()) {
@@ -30,12 +19,21 @@ void initAds(){
   Serial.println("ADS initialized");
 }
 
+/**
+ * Read resistance from adc
+ * pin: input on the adc
+ */
 double getResistance(int pin){
   adc = ads.readADC_SingleEnded(pin);
   volts = ads.computeVolts(adc);
   return volts > 0? rRef * (vRef/volts) - rRef:-1;
 }
 
+/**
+ * Get temperature from resistance and Steinhart–Hart coefficients
+ * res: resistance in ohm
+ * coeffs: coefficients double[3]
+ */
 double getTemperature(double res,double* coeffs){
   if(res<0) return -1;
   double temp = log(res);
@@ -44,7 +42,13 @@ double getTemperature(double res,double* coeffs){
   return temp;
 }
 
-//https://en.wikipedia.org/wiki/Steinhart%E2%80%93Hart_equation
+/**
+ * Get coefficients of Steinhart–Hart from 3 points  
+ * k1,k2,k3: temperature in Kelvin
+ * r1,r2,r3: resistance in ohm
+ * 
+ * https://en.wikipedia.org/wiki/Steinhart%E2%80%93Hart_equation
+ */ 
 void getCoefficients(double k1,double k2,double k3,double r1,double r2,double r3,double* coeffs){
     if(r1 == 0 || r2 ==0 || r3 == 0) return;
     if (r1 == r2 || r1 == r3 || r2 == r3) return;
