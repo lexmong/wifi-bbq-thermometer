@@ -1,5 +1,7 @@
-var app = angular.module('app', ['ngRoute']);
-
+var app = angular.module('app', ['ngRoute']).run(function ($rootScope) {
+    //default unit
+    $rootScope.unit = 'c';
+});
 
 app.config(function ($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
@@ -15,27 +17,26 @@ app.config(function ($routeProvider, $locationProvider) {
     });
 });
 
-app.controller('tempCtrl', ['$scope', '$http','$interval', function ($scope, $http, $interval) {
-    $scope.unit = 'c';
-
+/**
+ * Probe controller
+ */
+app.controller('tempCtrl', ['$scope','$rootScope', '$http','$interval', 
+    function ($scope, $rootScope,$http, $interval) {
     $scope.probes = [
         {id:1,target:'-',temperature:-1},
         {id:2,target:'-',temperature:-1},
-        {id:3,target:'-',temperature:-1},
-        {id:4,target:'-',temperature:-1}
     ]
 
     function getTemp() {
         $http.get('/readTemperature',{
-            params: {unit: $scope.unit}
+            params: {unit: $rootScope.unit}
         }).then((response) => {
-            console.log(response);
-            for(let i =0;i<4;i++){
+            for(let i =0;i<$scope.probes.length;i++){
                 $scope.probes[i].temperature = Math.round(response.data[i]);
             }
         }, (response) => {
-            console.log(response);
-            for(let i =0;i<4;i++){
+            console.error(response);
+            for(let i =0;i<$scope.probes.length;i++){
                 $scope.probes[i].temperature =-1;
             }
         });
@@ -52,18 +53,26 @@ app.controller('tempCtrl', ['$scope', '$http','$interval', function ($scope, $ht
     });
 }]);
 
-app.controller('configCtrl', ['$scope', '$http', function ($scope, $http) {
-    $scope.read = (i) => {
+/**
+ * Configuration controller
+ */ 
+app.controller('configCtrl', ['$scope','$rootScope','$http', 
+    function ($scope, $rootScope,$http) {
+    
+    //Read probe resistance
+    $scope.readResistance = (i) => {
         $http.get('/readResistance',{
             params: {probe: $scope.probe}
         }).then((response) => {
+            console.log(response);
             $scope.points[i].resistance = response.data[0];
         }, (response) => {
-            console.log(response);
+            console.error(response);
         });
     };
 
-    $scope.change = () => {
+    //On probe select change
+    $scope.changeProbe = () => {
         $scope.points = [
             {temperature:null,resistance:null},
             {temperature:null,resistance:null},
@@ -73,13 +82,12 @@ app.controller('configCtrl', ['$scope', '$http', function ($scope, $http) {
         $scope.coeffs = [];
     };
 
-    $scope.change();
-
-    $scope.submit = () => {
+    $scope.submitPoints = () => {
         $http.get('/saveCoeffs',{
             params: {
                 points: JSON.stringify($scope.points),
-                probe: $scope.probe
+                probe: $scope.probe,
+                unit: $rootScope.unit
             }
         }).then((response) => {
             console.log(response);
@@ -89,17 +97,25 @@ app.controller('configCtrl', ['$scope', '$http', function ($scope, $http) {
                 response.data.c
             ];
         }, (response) => {
-            console.log(response);
+            console.error(response);
         });
     };
 
     $scope.toAlpha = (i) => String.fromCharCode(i+65);
+    $scope.changeUnit = (unit)=>{$rootScope.unit = unit};
+
+    $scope.changeProbe();
 }]);
 
+/**
+ * Navbar controller 
+ */
 app.controller('navCtrl',['$scope','$location',function ($scope,$location){
     $scope.links = [
         {text:'Probes',href:'/'},
         {text:'Configuration',href:'/config'},
-    ];
-    $scope.class = (page) => page == $location.path()? 'active':'';
+    ]; 
+
+    //set navbar option class
+    $scope.class = (page) => page == $location.path() ? 'active':'';
 }]);

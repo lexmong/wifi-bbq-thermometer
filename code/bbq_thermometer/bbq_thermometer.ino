@@ -85,15 +85,24 @@ void setup() {
    * GET args: 
    * points: JSON [{'temperature'=>t,'resistance'=>},{'temperature'=>t,'resistance'=>},...] 
    * probe: (probe id 0 indexed)
+   * unit: c,f
    */
   server.on("/saveCoeffs",[](){
     DynamicJsonDocument doc(BUFFER_MAX);
     char buf[BUFFER_MAX];
+    int probe;
 
     deserializeJson(doc,server.arg("points"));
-    int probe = server.arg("probe").toInt()-1;
+    probe = server.arg("probe").toInt()-1;
 
-    //TODO fahrenheit
+    //fahrenheit
+    if(server.arg("unit").charAt(0) == 102){
+      doc[0]["temperature"] = ftoc(doc[0]["temperature"].as<double>());
+      doc[1]["temperature"] = ftoc(doc[1]["temperature"].as<double>());
+      doc[2]["temperature"] = ftoc(doc[2]["temperature"].as<double>());
+    }
+
+    
     getCoefficients(
       ctok(doc[0]["temperature"].as<double>()),
       ctok(doc[1]["temperature"].as<double>()),
@@ -156,6 +165,8 @@ bool loadCoefficients(char* filename) {
 /**
  * Save coefficients to JSON file
  */
+
+//TODO filepath
 bool saveCoefficients() {
   DynamicJsonDocument doc(BUFFER_MAX);
   File f;

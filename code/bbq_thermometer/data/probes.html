@@ -1,13 +1,14 @@
-
-
 <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xl-3 mt-3" ng-repeat="probe in probes" ng-if="probe.temperature>0">
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xl-3 mt-3" 
+    ng-repeat="probe in probes" ng-if="probe.temperature>0">
         <div class="card probe">
             <div class="d-flex align-items-center">
               <div class="probe-number ms-3">{{probe.id}}</div>
                 <div class="ms-3 target">Target<br>{{probe.target}}</div>
-                <div class="flex-fill text-end temperature">{{probe.temperature}}</div>
-                <div class="me-3 text-end unit">&#176;<span class="text-uppercase">{{unit}}</span></div>
+                <div class="flex-fill text-end 
+                temperature">{{probe.temperature}}</div>
+                <div class="me-3 text-end unit">&#176;<span 
+                    class="text-uppercase">{{unit}}</span></div>
             </div>
         </div>
     </div>

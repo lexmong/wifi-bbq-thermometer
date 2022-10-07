@@ -4,39 +4,64 @@
             <h3 class="card-title mb-4">Probe calibration</h3>
             <h5>Probe</h5>
             <div class="input-group">
-                <select class="form-control" ng-init="probe = '1'"  ng-model="probe" ng-change="change()">
-                    <option>1</option>
-                    <option>2</option>
+                <select class="form-control" ng-init="probe = '1'" 
+                ng-model="probe" ng-change="changeProbe()">
+                    <option ng-repeat="probe in probes track by $i">{{$i+1}}</option>
                 </select>
             </div>
 
-            <form ng-submit="submit()" class="mb-0">
+            <form ng-submit="submitPoints()" class="mb-0">
                 <div class="mt-4" ng-repeat="point in points track by $index">
                     <h5 class="">Point {{$index+1}}</h5>
                     <div class="mt-2 d-flex align-items-center">
                         <div class="flex-fill pe-1">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Temperature" pattern="([0-9]*[.])?[0-9]+" ng-model="point.temperature" required>
+                                <input type="text" class="form-control" 
+                                placeholder="Temperature" 
+                                pattern="([0-9]*[.])?[0-9]+" 
+                                ng-model="point.temperature" required>
                             </div>
                         </div>
                         <div class="flex-fill ps-1">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Resistance" pattern="([0-9]*[.])?[0-9]+" ng-model="point.resistance" required>
-                                <input class="btn btn-outline-light" type="button" ng-click="read($index)" value="Read">
+                                <input type="text" class="form-control" 
+                                placeholder="Resistance" 
+                                pattern="([0-9]*[.])?[0-9]+" 
+                                ng-model="point.resistance" required>
+                                <input class="btn btn-outline-light" 
+                                type="button" 
+                                ng-click="readResistance($index)" value="Read">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="mt-4" ng-show="coeffs.length > 0">
                     <h5>Coefficients</h5>
-                    <div class="input-group mb-2" ng-repeat="coeff in coeffs track by $index">
-                        <span class="input-group-text bg-light">{{toAlpha($index)}}</span>
-                        <div class="form-control bg-transparent text-light text-uppercase">{{coeff}}</div>
+                    <div class="input-group mb-2" 
+                    ng-repeat="coeff in coeffs track by $index">
+                        <span class="input-group-text 
+                        bg-light">{{toAlpha($index)}}</span>
+                        <div class="form-control bg-transparent text-light 
+                        text-uppercase">{{coeff}}</div>
                     </div>
                 </div>
-                <input class="btn btn-outline-light mt-5 mb-1 w-100" type="submit" value="Submit">
+                <input class="btn btn-outline-light mt-5 mb-1 w-100" 
+                type="submit" value="Submit">
             </form>
         </div>
     </div>
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xl-3 mt-3">
+        <div class="card probe p-3">
+            <h3 class="card-title mb-4">Unit</h3>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn w-50" 
+                ng-click="changeUnit('c')" 
+                ng-class="{'btn-light': unit=='c',
+                'btn-outline-light': unit=='f'}">Celsius</button>
+                <button type="button" class="btn w-50" 
+                ng-click="changeUnit('f')" ng-class="{'btn-light': unit=='f',
+                'btn-outline-light': unit=='c'}">Fahrenheit</button>
+            </div>
+        </div>
+    </div>
 </div>
-
