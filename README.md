@@ -38,4 +38,7 @@ An ESP8266 based wifi bbq thermometer using angularjs and bootstrap.
 3. Upload sketch data
 
 
-## Probe calibration (TODO)
+## Probe calibration
+Read the probe resistance at three different temperatures to calibrate. For best results, chose two temperatures close to the upper and lower bound of the operating range and one in the middle. Once submitted, the coefficients are calculated and saved to SPIFFS.
+
+<img src="https://user-images.githubusercontent.com/77702089/197054787-176ecc93-22d5-4498-b661-d22c478f58f1.gif" width="400">
