@@ -8,6 +8,7 @@
 
 ESP8266WebServer server(80);
 const int BUFFER_MAX = 1000;
+char* PATH_COEFFICIENTS = "/coeffs.json";
 
 void setup() {
   Serial.begin(115200);
@@ -26,7 +27,7 @@ void setup() {
   server.serveStatic("/config.html", SPIFFS, "/config.html");
   server.serveStatic("/style.css", SPIFFS, "/style.css");
 
-  if(loadCoefficients("/coeffs.json")){
+  if(loadCoefficients(PATH_COEFFICIENTS)){
     Serial.println("Coefficients loaded");
     for(int i =0; i< N_PROBES; i++){
       Serial.print("    probe ");
@@ -65,7 +66,7 @@ void setup() {
 
   /**
    * Read resistance
-   * GET args: probe (probe id 0 indexed)
+   * GET args: probe (probe id 1 indexed)
    */
   server.on("/readResistance",[](){
     DynamicJsonDocument doc(BUFFER_MAX);
@@ -84,7 +85,7 @@ void setup() {
    * Calculates and returns coefficients 
    * GET args: 
    * points: JSON [{'temperature'=>t,'resistance'=>},{'temperature'=>t,'resistance'=>},...] 
-   * probe: (probe id 0 indexed)
+   * probe: (probe id 1 indexed)
    * unit: c,f
    */
   server.on("/saveCoeffs",[](){
@@ -119,7 +120,7 @@ void setup() {
     doc["b"] = coeffs[probe][1];
     doc["c"] = coeffs[probe][2];
 
-    saveCoefficients();
+    saveCoefficients(PATH_COEFFICIENTS);
 
     serializeJson(doc, buf);
 
@@ -139,11 +140,11 @@ void loop() {
 /***
  * Load coefficients from JSON file
  */
-bool loadCoefficients(char* filename) {
+bool loadCoefficients(char* path) {
   StaticJsonDocument<1024> doc;
   File f;
   
-  f = SPIFFS.open(filename, "r");
+  f = SPIFFS.open(path, "r");
   if(!f)return false;
 
  
@@ -166,12 +167,11 @@ bool loadCoefficients(char* filename) {
  * Save coefficients to JSON file
  */
 
-//TODO filepath
-bool saveCoefficients() {
+bool saveCoefficients(char* path) {
   DynamicJsonDocument doc(BUFFER_MAX);
   File f;
   
-  f = SPIFFS.open("/coeffs.json", "w");
+  f = SPIFFS.open(path, "w");
   if(!f)return false;
 
   for(int i =0;i<N_PROBES;i++){

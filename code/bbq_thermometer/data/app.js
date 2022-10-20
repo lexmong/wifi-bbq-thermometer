@@ -1,6 +1,7 @@
 var app = angular.module('app', ['ngRoute']).run(function ($rootScope) {
     //default unit
     $rootScope.unit = 'c';
+    $rootScope.n_probes = 2;
 });
 
 app.config(function ($routeProvider, $locationProvider) {
@@ -22,10 +23,15 @@ app.config(function ($routeProvider, $locationProvider) {
  */
 app.controller('tempCtrl', ['$scope','$rootScope', '$http','$interval', 
     function ($scope, $rootScope,$http, $interval) {
-    $scope.probes = [
-        {id:1,target:'-',temperature:-1},
-        {id:2,target:'-',temperature:-1},
-    ]
+
+    $scope.probes = [];
+    for(let i=1;i<=$rootScope.n_probes;i++){
+      $scope.probes.push({
+        id:i,
+        target:'-',
+        temperature:-1
+      });
+    }
 
     function getTemp() {
         $http.get('/readTemperature',{

@@ -4,9 +4,10 @@
             <h3 class="card-title mb-4">Probe calibration</h3>
             <h5>Probe</h5>
             <div class="input-group">
-                <select class="form-control" ng-init="probe = '1'" 
+                <select class="form-control" ng-init="probe = '1'"
                 ng-model="probe" ng-change="changeProbe()">
-                    <option ng-repeat="probe in probes track by $i">{{$i+1}}</option>
+                    <option ng-repeat="_ in [].constructor(n_probes)
+                     track by $index">{{$index+1}}</option>
                 </select>
             </div>
 
@@ -16,9 +17,8 @@
                     <div class="mt-2 d-flex align-items-center">
                         <div class="flex-fill pe-1">
                             <div class="input-group">
-                                <input type="text" class="form-control" 
+                                <input type="number" class="form-control" 
                                 placeholder="Temperature" 
-                                pattern="([0-9]*[.])?[0-9]+" 
                                 ng-model="point.temperature" required>
                             </div>
                         </div>
